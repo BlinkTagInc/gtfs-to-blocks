@@ -6,6 +6,7 @@ import {
   importGtfs,
   getStoptimes,
   getDeadheadTimes,
+  getRoutes,
   Config,
   ConfigAgency,
   Calendar,
@@ -68,6 +69,8 @@ const gtfsToBlocks = async (initialConfig: Config) => {
     )
   }
 
+  const routes = getRoutes()
+
   const serviceIds = calendars.map((calendar: Calendar) => calendar.service_id)
   const trips = db
     .prepare(
@@ -107,6 +110,7 @@ const gtfsToBlocks = async (initialConfig: Config) => {
           tripSegments.push({
             blockId: trip.block_id,
             routeId: trip.route_id,
+            route: routes.find((route) => route.route_id === trip.route_id),
             tripId: trip.trip_id,
             tripHeadsign: trip.trip_headsign,
             stopHeadsign: stoptime.stop_headsign,

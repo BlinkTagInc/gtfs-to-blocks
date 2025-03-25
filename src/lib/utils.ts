@@ -26,6 +26,7 @@ export async function generateCSV(tripSegments) {
   lines.push([
     'Block ID',
     'Route ID',
+    'Route',
     'Trip ID',
     'Direction ID',
     'Days',
@@ -42,6 +43,7 @@ export async function generateCSV(tripSegments) {
     lines.push([
       tripSegment.blockId,
       tripSegment.routeId,
+      tripSegment.routeName,
       tripSegment.tripId,
       tripSegment.directionId,
       tripSegment.dayList,

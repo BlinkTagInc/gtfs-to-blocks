@@ -94,6 +94,10 @@ export function formatTripSegments(tripSegments, config) {
     return {
       blockId: tripSegment.blockId,
       routeId: tripSegment.routeId,
+      routeName:
+        tripSegment.route?.route_short_name ??
+        tripSegment.route?.route_long_name ??
+        '',
       tripId: tripSegment.tripId,
       directionId: tripSegment.directionId,
       departureTime: fromGTFSTime(tripSegment.departureTime).format(
