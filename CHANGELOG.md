@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Add column for Route name
 
+### Updated
+- Dependency updates
+
 ## [0.3.3] - 2025-02-25
 
 ### Updated
