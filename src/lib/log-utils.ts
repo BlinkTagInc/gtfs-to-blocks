@@ -85,7 +85,11 @@ export function logStats(config) {
     return noop
   }
 
-  return (stats: any) => {
+  return (stats: {
+    trips: number
+    tripSegments: number
+    warnings: string[]
+  }) => {
     const table = new Table({
       colWidths: [40, 20],
       head: ['Item', 'Count'],

@@ -23,9 +23,8 @@ const { argv } = yargs(hideBin(process.argv))
   })
   .default('skipImport', undefined)
 
-const handleError = (error: any) => {
-  const text = error || 'Unknown Error'
-  process.stdout.write(`\n${formatError(text)}\n`)
+const handleError = (error = 'Unknown Error') => {
+  process.stdout.write(`\n${formatError(error)}\n`)
   console.error(error)
   process.exit(1)
 }

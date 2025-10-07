@@ -42,10 +42,10 @@ export async function prepDirectory(outputPath: string, config) {
   // Check if outputPath exists
   try {
     await access(outputPath)
-  } catch (error: any) {
+  } catch {
     try {
       await mkdir(outputPath, { recursive: true })
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error?.code === 'ENOENT') {
         throw new Error(
           `Unable to write to ${outputPath}. Try running this command from a writable directory.`,

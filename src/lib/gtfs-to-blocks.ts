@@ -96,7 +96,6 @@ const gtfsToBlocks = async (initialConfig: Config) => {
     config,
   )
 
-  /* eslint-disable no-await-in-loop */
   for (const trip of trips) {
     try {
       const stoptimes = getStoptimes(
@@ -169,14 +168,13 @@ const gtfsToBlocks = async (initialConfig: Config) => {
       outputStats.trips += 1
 
       bar?.increment()
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error)
       outputStats.warnings.push(errorMessage)
       bar?.interrupt(errorMessage)
     }
   }
-  /* eslint-enable no-await-in-loop */
 
   const sortedTripSegments = sortBy(tripSegments, [
     // Sort by integer else alphabetically
