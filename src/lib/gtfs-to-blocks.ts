@@ -57,36 +57,58 @@ const gtfsToBlocks = async (initialConfig: Config) => {
 
   const calendars = db
     .prepare(
-      'SELECT DISTINCT service_id FROM calendar WHERE start_date <= ? AND end_date >= ?',
+      'SELECT service_id FROM calendar WHERE start_date <= ? AND end_date >= ?',
     )
     .all([config.date, config.date])
 
-  if (calendars.length === 0) {
+  const calendarDates = db
+    .prepare(
+      'SELECT service_id, exception_type FROM calendar_dates WHERE date = ?',
+    )
+    .all([config.date])
+
+  const serviceIds = new Set(
+    calendars.map((calendar: Calendar) => calendar.service_id),
+  )
+
+  for (const calendarDate of calendarDates) {
+    if (calendarDate.exception_type === 1) {
+      serviceIds.add(calendarDate.service_id)
+    } else if (calendarDate.exception_type === 2) {
+      serviceIds.delete(calendarDate.service_id)
+    }
+  }
+
+  if (serviceIds.size === 0) {
     throw new Error(
-      `No calendars found for ${moment(config.date, 'YYYYMMDD').format(
-        'MMM D, YYYY',
-      )}`,
+      `No calendar or calendar dates found for ${moment(
+        config.date,
+        'YYYYMMDD',
+      ).format('MMM D, YYYY')}`,
     )
   }
 
   const routes = getRoutes()
 
-  const serviceIds = calendars.map((calendar: Calendar) => calendar.service_id)
   const trips = db
     .prepare(
-      `SELECT trip_id, direction_id, service_id, block_id, route_id, trip_headsign FROM trips where service_id IN (${serviceIds
+      `SELECT trip_id, direction_id, service_id, block_id, route_id, trip_headsign FROM trips where service_id IN (${[
+        ...serviceIds,
+      ]
         .map(() => '?')
         .join(', ')})`,
     )
-    .all(serviceIds)
+    .all([...serviceIds])
   const deadheads = config.includeDeadheads
     ? db
         .prepare(
-          `SELECT deadhead_id, service_id, block_id FROM deadheads where service_id IN (${serviceIds
+          `SELECT deadhead_id, service_id, block_id FROM deadheads where service_id IN (${[
+            ...serviceIds,
+          ]
             .map(() => '?')
             .join(', ')})`,
         )
-        .all(serviceIds)
+        .all([...serviceIds])
     : []
   const tripSegments = []
 
