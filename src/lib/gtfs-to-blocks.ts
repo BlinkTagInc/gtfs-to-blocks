@@ -14,12 +14,11 @@ import {
 import sanitize from 'sanitize-filename'
 import Timer from 'timer-machine'
 
-import { prepDirectory } from './file-utils.js'
+import { prepDirectory, untildify } from './file-utils.js'
 import { progressBar, log, logStats } from './log-utils.ts'
 import { fromGTFSTime, generateCSV, setDefaultConfig } from './utils.ts'
 import { formatTripSegments } from './formatters.js'
 import moment from 'moment'
-import untildify from 'untildify'
 
 const gtfsToBlocks = async (initialConfig: Config) => {
   const config = setDefaultConfig(initialConfig)

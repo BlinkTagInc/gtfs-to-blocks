@@ -1,6 +1,8 @@
 import { join, resolve } from 'node:path'
+import { homedir } from 'node:os'
 import { access, mkdir, readdir, readFile, rm } from 'node:fs/promises'
-import untildify from 'untildify'
+
+const homeDirectory = homedir()
 
 /*
  * Attempt to parse the specified config JSON file.
@@ -68,4 +70,15 @@ export async function prepDirectory(outputPath: string, config) {
   if (config.overwriteExistingFiles === true) {
     await rm(join(outputPath, '*'), { recursive: true, force: true })
   }
+}
+
+/**
+ * Converts a tilde path to a full path
+ * @param pathWithTilde The path to convert
+ * @returns The full path
+ */
+export function untildify(pathWithTilde: string): string {
+  return homeDirectory
+    ? pathWithTilde.replace(/^~(?=$|\/|\\)/, homeDirectory)
+    : pathWithTilde
 }
