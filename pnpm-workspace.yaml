@@ -1,5 +1,2 @@
 allowBuilds:
   better-sqlite3: true
-  esbuild: false
-minimumReleaseAgeExclude:
-  - gtfs@4.19.1
