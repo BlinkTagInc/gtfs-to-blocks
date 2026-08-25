@@ -5,89 +5,110 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Updated
+
+- Dependency updates
+
 ## [0.3.13] - 2026-07-28
 
 ### Updated
+
 - Dependency updates
 - Removed eslint
 
 ## [0.3.12] - 2026-06-18
 
 ### Updated
+
 - Dependency updates
 - Switch to tsdown
 
 ## [0.3.11] - 2026-04-22
 
 ### Added
+
 - Support for calendar_dates.txt
 
 ## [0.3.10] - 2026-04-05
 
 ### Updated
-- Dependency updates
 
+- Dependency updates
 
 ## [0.3.9] - 2026-03-29
 
 ### Updated
+
 - Dependency updates
 
 ## [0.3.8] - 2026-01-21
 
 ### Updated
+
 - Dependency updates
 
 ## [0.3.7] - 2025-10-07
 
 ### Updated
+
 - Dependency updates
 - eslint updates
 
 ## [0.3.6] - 2025-06-10
 
 ### Updated
+
 - Dependency updates
 
 ## [0.3.5] - 2025-04-22
 
 ### Updated
+
 - Dependency updates
 
 ## [0.3.4] - 2025-03-24
 
 ### Changed
+
 - Add column for Route name
 
 ### Updated
+
 - Dependency updates
 
 ## [0.3.3] - 2025-02-25
 
 ### Updated
+
 - Dependency updates
 
 ## [0.3.2] - 2024-11-18
 
 ### Updated
+
 - Dependency updates
 
 ## [0.3.1] - 2024-10-24
 
 ### Added
+
 - outputPath config options
 - return path to csv from function
 
 ## [0.3.0] - 2024-10-24
 
 ### Updated
+
 - Renamed to gtfs-to-blocks
 - Dependency updates
 - Improved logging
 
 ## [0.2.0] - 2024-10-18
 
-### Added 
+### Added
+
 - Add date parameter
 - Deadheads from ODS
 - direction_id, route_id, trip_headsign, stop_headsign as fields
@@ -95,9 +116,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Convert to typescript
 
 ### Updated
+
 - Dependency updates
 
 ## [0.1.0]
 
 ### Added
+
 - Initial Commit
