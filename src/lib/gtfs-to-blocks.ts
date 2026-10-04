@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import { writeFile } from 'node:fs/promises'
 import { sortBy } from 'lodash-es'
+import { DateTime } from 'luxon'
 import {
   openDb,
   importGtfs,
@@ -18,7 +19,6 @@ import { prepDirectory, untildify } from './file-utils.js'
 import { progressBar, log, logStats } from './log-utils.ts'
 import { fromGTFSTime, generateCSV, setDefaultConfig } from './utils.ts'
 import { formatTripSegments } from './formatters.js'
-import moment from 'moment'
 
 const gtfsToBlocks = async (initialConfig: Config) => {
   const config = setDefaultConfig(initialConfig)
@@ -80,10 +80,10 @@ const gtfsToBlocks = async (initialConfig: Config) => {
 
   if (serviceIds.size === 0) {
     throw new Error(
-      `No calendar or calendar dates found for ${moment(
+      `No calendar or calendar dates found for ${DateTime.fromFormat(
         config.date,
-        'YYYYMMDD',
-      ).format('MMM D, YYYY')}`,
+        'yyyyMMdd',
+      ).toFormat('MMM d, yyyy')}`,
     )
   }
 
@@ -214,9 +214,10 @@ const gtfsToBlocks = async (initialConfig: Config) => {
 
   // Print stats
   log(config)(
-    `${agencyKey}: block export for ${moment(config.date, 'YYYYMMDD').format(
-      'MMM D, YYYY',
-    )} created at ${csvPath}`,
+    `${agencyKey}: block export for ${DateTime.fromFormat(
+      config.date,
+      'yyyyMMdd',
+    ).toFormat('MMM d, yyyy')} created at ${csvPath}`,
   )
 
   logStats(config)(outputStats)

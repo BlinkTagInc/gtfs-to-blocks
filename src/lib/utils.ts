@@ -1,5 +1,5 @@
 import { stringify } from 'csv-stringify'
-import moment from 'moment'
+import { DateTime } from 'luxon'
 
 /*
  * Initialize configuration with defaults.
@@ -7,7 +7,7 @@ import moment from 'moment'
 export function setDefaultConfig(initialConfig) {
   const defaults = {
     timeFormat: 'HH:mm:ss',
-    date: moment().format('YYYYMMDD'),
+    date: DateTime.local().toFormat('yyyyMMdd'),
     includeDeadheads: true,
     overwriteExistingFiles: true,
   }
@@ -61,14 +61,13 @@ export async function generateCSV(tripSegments) {
 }
 
 /*
- * Convert a GTFS formatted time string into a moment less than 24 hours.
+ * Convert a GTFS time to a clock time, wrapping hours at 24.
  */
-export function fromGTFSTime(timeString) {
-  const duration = moment.duration(timeString)
+export function fromGTFSTime(timeString: string | null) {
+  const [hours, minutes, seconds] = (timeString ?? '00:00:00')
+    .split(':')
+    .map(Number)
 
-  return moment({
-    hour: duration.hours(),
-    minute: duration.minutes(),
-    second: duration.seconds(),
-  })
+  // Use a fixed UTC date so clock times are unaffected by DST or today's date.
+  return DateTime.utc(1970, 1, 1, hours % 24, minutes, seconds)
 }

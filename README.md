@@ -20,9 +20,9 @@
 <hr>
 
 GTFS-to-blocks exports all trip segments sorted by block_id and their departure times to a CSV file.
-          
+
 What is a block? A block is a group of trips that are part of the same transit service usually operated by a single vehicle. Two trips which overlap in time can&apos;t be part of the same block as a vehicle can only operate one trip at a time.
-          
+
 This tool is useful for auditing all blocks for a specific day. By reviewing trips grouped by block in chronological order, you can ensure that no trips overlap for a specific block and find gaps where additional trips could be added.
 
 ## Example Output
@@ -75,7 +75,7 @@ All files starting with `config*.json` are .gitignored - so you can create multi
 | [`includeDeadheads`](#includedeadheads)             | boolean | Whether or not to include deadhead trips from ODS format.                                    |
 | [`outputPath`](#outputpath)                         | string  | The path to the folder to write the csv file to. Optional, defaults to `output/<agencyKey>`. |
 | [`overwriteExistingFiles`](#overwriteexistingfiles) | boolean | Whether or not to overwrite existing files in the `outputPath` directory.                    |
-| [`timeFormat`](#timeformat)                         | string  | A string defining time format in moment.js style.                                            |
+| [`timeFormat`](#timeformat)                         | string  | A string defining time format using Luxon tokens.                                            |
 
 ### agencies
 
@@ -168,16 +168,17 @@ API along with your API token.
 
 \{Boolean\} Whether or not to overwrite existing files in the `outputPath` folder. Optional, defaults to `true`.
 
-````json
+```json
 "overwriteExistingFiles": true
+```
 
 ### timeFormat​
 
-{String} A string defining time format using moment.js tokens. [See full list of formatting options](https://momentjs.com/docs/#/displaying/format/). Defaults to HH:mm:ss which yields "13:14:30".
+{String} A string defining time format using Luxon tokens. [See full list of formatting options](https://moment.github.io/luxon/#/formatting?id=table-of-tokens). Defaults to HH:mm:ss which yields "13:14:30". For 12-hour time, use `h:mm a` (for example, "1:14 PM"). Existing Moment formats must be updated to Luxon tokens, such as `A` to `a` for AM/PM. GTFS times beyond 24 hours wrap to clock time, so "25:14:30" displays as "01:14:30".
 
 ```json
 "timeFormat": "HH:mm:ss"
-````
+```
 
 ## Quick Start
 

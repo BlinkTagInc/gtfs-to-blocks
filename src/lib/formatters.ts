@@ -100,10 +100,10 @@ export function formatTripSegments(tripSegments, config) {
         '',
       tripId: tripSegment.tripId,
       directionId: tripSegment.directionId,
-      departureTime: fromGTFSTime(tripSegment.departureTime).format(
+      departureTime: fromGTFSTime(tripSegment.departureTime).toFormat(
         config.timeFormat,
       ),
-      arrivalTime: fromGTFSTime(tripSegment.arrivalTime).format(
+      arrivalTime: fromGTFSTime(tripSegment.arrivalTime).toFormat(
         config.timeFormat,
       ),
       dayList: formatDays(calendar),

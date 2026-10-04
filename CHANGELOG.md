@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Updated
 
+- Replace Moment with Luxon; custom `timeFormat` values now use Luxon tokens.
 - Dependency updates
 
 ## [0.3.14] - 2026-08-25
