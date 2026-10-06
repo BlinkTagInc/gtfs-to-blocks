@@ -91,7 +91,7 @@ const gtfsToBlocks = async (initialConfig: Config) => {
 
   const trips = db
     .prepare(
-      `SELECT trip_id, direction_id, service_id, block_id, route_id, trip_headsign FROM trips where service_id IN (${[
+      `SELECT trip_id, trip_short_name, direction_id, service_id, block_id, route_id, trip_headsign FROM trips where service_id IN (${[
         ...serviceIds,
       ]
         .map(() => '?')
@@ -132,6 +132,7 @@ const gtfsToBlocks = async (initialConfig: Config) => {
             routeId: trip.route_id,
             route: routes.find((route) => route.route_id === trip.route_id),
             tripId: trip.trip_id,
+            tripShortName: trip.trip_short_name,
             tripHeadsign: trip.trip_headsign,
             stopHeadsign: stoptime.stop_headsign,
             directionId: trip.direction_id,
