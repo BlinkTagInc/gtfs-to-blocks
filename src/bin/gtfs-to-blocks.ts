@@ -7,23 +7,23 @@ import { getConfig } from '../lib/file-utils.ts'
 import { formatError } from '../lib/log-utils.ts'
 import gtfsToBlocks from '../index.ts'
 
-const { argv } = yargs(hideBin(process.argv))
+const argv = await yargs(hideBin(process.argv))
   .usage('Usage: $0 --configPath ./config.json')
   .help()
-  .option('c', {
-    alias: 'configPath',
+  .option('configPath', {
+    alias: 'c',
     describe: 'Path to config file',
     default: './config.json',
     type: 'string',
   })
-  .option('s', {
-    alias: 'skipImport',
+  .option('skipImport', {
+    alias: 's',
     describe: 'Don’t import GTFS file.',
     type: 'boolean',
   })
-  .default('skipImport', undefined)
+  .parseAsync()
 
-const handleError = (error = 'Unknown Error') => {
+const handleError = (error: unknown = 'Unknown Error') => {
   process.stdout.write(`\n${formatError(error)}\n`)
   console.error(error)
   process.exit(1)

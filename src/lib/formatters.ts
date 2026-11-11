@@ -1,6 +1,25 @@
-import { getCalendars, getOpsLocations, getStops } from 'gtfs'
+import type { Gtfs, Calendar, Stops, OpsLocations, Routes } from 'gtfs'
+import type { BlocksConfig } from './app-options.js'
 import { uniq } from 'lodash-es'
 import { fromGTFSTime } from './utils.ts'
+
+export interface TripSegment {
+  sourceId: string
+  blockId: string | null
+  routeId?: string
+  route?: Routes
+  tripId: string
+  tripShortName?: string | null
+  tripHeadsign?: string | null
+  stopHeadsign?: string | null
+  directionId?: number | null
+  serviceId: string
+  departureStopId: string | null
+  arrivalStopId: string | null
+  departureTime: string | null
+  arrivalTime: string | null
+  isDeadhead: boolean
+}
 
 /*
  * Format a calendar's list of days for display using abbreviated day names.
@@ -13,8 +32,8 @@ const days = [
   'friday',
   'saturday',
   'sunday',
-]
-export function formatDays(calendar) {
+] as const
+export function formatDays(calendar: Calendar | undefined) {
   const daysShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   let daysInARow = 0
   let dayString = ''
@@ -59,38 +78,56 @@ export function formatDays(calendar) {
   return dayString
 }
 
-export function formatTripSegments(tripSegments, config) {
-  const stopIds = uniq(
-    tripSegments.flatMap((tripSegment) => [
-      tripSegment.departureStopId,
-      tripSegment.arrivalStopId,
-    ]),
-  )
-  const serviceIds = uniq(
-    tripSegments.map((tripSegment) => tripSegment.serviceId),
-  )
-
-  const stops = getStops({ stop_id: stopIds })
-  const opsLocations = getOpsLocations({ ops_location_id: stopIds })
-  const calendars = getCalendars({ service_id: serviceIds })
+export async function formatTripSegments(
+  tripSegments: TripSegment[],
+  config: BlocksConfig & { timeFormat: string },
+  gtfs: Gtfs,
+) {
+  const sources = uniq(tripSegments.map((segment) => segment.sourceId))
+  const stops: Stops[] = []
+  const opsLocations: OpsLocations[] = []
+  const calendars: Calendar[] = []
+  for (const sourceId of sources) {
+    const scope = { source_id: sourceId }
+    stops.push(...(await gtfs.schedule.stops.where(scope).all()))
+    opsLocations.push(...(await gtfs.todsV1.opsLocations.where(scope).all()))
+    calendars.push(...(await gtfs.schedule.calendar.where(scope).all()))
+  }
 
   return tripSegments.map((tripSegment) => {
     const calendar = calendars.find(
-      (calendar) => calendar.service_id === tripSegment.serviceId,
+      (calendar) =>
+        calendar.source_id === tripSegment.sourceId &&
+        calendar.service_id === tripSegment.serviceId,
     )
     const departureStop =
-      stops.find((stop) => stop.stop_id === tripSegment.departureStopId) ??
+      stops.find(
+        (stop) =>
+          stop.source_id === tripSegment.sourceId &&
+          stop.stop_id === tripSegment.departureStopId,
+      ) ??
       opsLocations.find(
         (opsLocation) =>
+          opsLocation.source_id === tripSegment.sourceId &&
           opsLocation.ops_location_id === tripSegment.departureStopId,
       )
     const arrivalStop =
-      stops.find((stop) => stop.stop_id === tripSegment.arrivalStopId) ??
+      stops.find(
+        (stop) =>
+          stop.source_id === tripSegment.sourceId &&
+          stop.stop_id === tripSegment.arrivalStopId,
+      ) ??
       opsLocations.find(
         (opsLocation) =>
+          opsLocation.source_id === tripSegment.sourceId &&
           opsLocation.ops_location_id === tripSegment.arrivalStopId,
       )
 
+    if (!departureStop || !arrivalStop) {
+      throw new Error(
+        `Missing stop or operations location for source ${tripSegment.sourceId}, trip ${tripSegment.tripId}`,
+      )
+    }
     return {
       blockId: tripSegment.blockId,
       routeId: tripSegment.routeId,
@@ -109,8 +146,13 @@ export function formatTripSegments(tripSegments, config) {
       ),
       dayList: formatDays(calendar),
       departureLocation:
-        departureStop.stop_name ?? departureStop.ops_location_name,
-      arrivalLocation: arrivalStop.stop_name ?? arrivalStop.ops_location_name,
+        'stop_name' in departureStop
+          ? departureStop.stop_name
+          : departureStop.ops_location_name,
+      arrivalLocation:
+        'stop_name' in arrivalStop
+          ? arrivalStop.stop_name
+          : arrivalStop.ops_location_name,
       tripHeadsign: tripSegment.tripHeadsign,
       stopHeadsign: tripSegment.stopHeadsign,
       isDeadhead: tripSegment.isDeadhead.toString(),

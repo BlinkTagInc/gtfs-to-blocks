@@ -1,3 +1,4 @@
+import type { BlocksConfig } from './app-options.js'
 import { join, resolve } from 'node:path'
 import { homedir } from 'node:os'
 import { access, mkdir, readdir, readFile, rm } from 'node:fs/promises'
@@ -7,7 +8,10 @@ const homeDirectory = homedir()
 /*
  * Attempt to parse the specified config JSON file.
  */
-export async function getConfig(argv) {
+export async function getConfig(argv: {
+  configPath: string
+  skipImport?: boolean
+}): Promise<BlocksConfig> {
   try {
     const data = await readFile(
       resolve(untildify(argv.configPath)),
@@ -40,7 +44,7 @@ export async function getConfig(argv) {
 /*
  * Prepare the outputPath directory for writing timetable files.
  */
-export async function prepDirectory(outputPath: string, config) {
+export async function prepDirectory(outputPath: string, config: BlocksConfig) {
   // Check if outputPath exists
   try {
     await access(outputPath)
@@ -48,7 +52,11 @@ export async function prepDirectory(outputPath: string, config) {
     try {
       await mkdir(outputPath, { recursive: true })
     } catch (error: unknown) {
-      if (error?.code === 'ENOENT') {
+      if (
+        error instanceof Error &&
+        'code' in error &&
+        error.code === 'ENOENT'
+      ) {
         throw new Error(
           `Unable to write to ${outputPath}. Try running this command from a writable directory.`,
         )

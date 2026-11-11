@@ -2,12 +2,12 @@
   "agencies": [
     {
       "agency_key": "my-agency-name",
-      "url": "~/path/to/my/gtfs"
+      "path": "~/path/to/my/gtfs"
     }
   ],
   "date": "20221024",
   "includeDeadheads": true,
   "outputPath": "custom/output/path",
-  "sqlitePath": "/tmp/gtfs",
+  "sqlitePath": "./gtfs-v5.sqlite",
   "timeFormat": "HH:mm:ss"
 }

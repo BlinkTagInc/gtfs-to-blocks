@@ -1,3 +1,4 @@
+import type { BlocksConfig } from './app-options.js'
 import { clearLine, cursorTo } from 'node:readline'
 import PrettyError from 'pretty-error'
 import { noop } from 'lodash-es'
@@ -10,7 +11,7 @@ pe.start()
 /*
  * Returns a log function based on config settings
  */
-export function log(config) {
+export function log(config: BlocksConfig) {
   if (config.verbose === false) {
     return noop
   }
@@ -19,7 +20,7 @@ export function log(config) {
     return config.logFunction
   }
 
-  return (text, overwrite) => {
+  return (text: string, overwrite?: boolean) => {
     if (overwrite === true && process.stdout.isTTY) {
       clearLine(process.stdout, 0)
       cursorTo(process.stdout, 0)
@@ -34,12 +35,12 @@ export function log(config) {
 /*
  * Returns an warning log function based on config settings
  */
-export function logWarning(config) {
+export function logWarning(config: BlocksConfig) {
   if (config.logFunction) {
     return config.logFunction
   }
 
-  return (text) => {
+  return (text: string) => {
     process.stdout.write(`\n${formatWarning(text)}\n`)
   }
 }
@@ -47,12 +48,12 @@ export function logWarning(config) {
 /*
  * Returns an error log function based on config settings
  */
-export function logError(config) {
+export function logError(config: BlocksConfig) {
   if (config.logFunction) {
     return config.logFunction
   }
 
-  return (text) => {
+  return (text: string) => {
     process.stdout.write(`\n${formatError(text)}\n`)
   }
 }
@@ -60,7 +61,7 @@ export function logError(config) {
 /*
  * Format console warning text
  */
-export function formatWarning(text) {
+export function formatWarning(text: string) {
   return `${chalk.yellow.underline('Warning')}${chalk.yellow(
     ':',
   )} ${chalk.yellow(text)}`
@@ -69,8 +70,8 @@ export function formatWarning(text) {
 /*
  * Format console error text
  */
-export function formatError(error) {
-  const message = error instanceof Error ? error.message : error
+export function formatError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error)
   return `${chalk.red.underline('Error')}${chalk.red(':')} ${chalk.red(
     message.replace('Error: ', ''),
   )}`
@@ -79,7 +80,7 @@ export function formatError(error) {
 /*
  * Print a table of stats to the console.
  */
-export function logStats(config) {
+export function logStats(config: BlocksConfig) {
   // Hide stats table from custom log functions
   if (config.logFunction) {
     return noop
@@ -96,9 +97,9 @@ export function logStats(config) {
     })
 
     table.push(
-      ['🚍 Trips', stats.trips],
-      ['🕑 Trip Segments', stats.tripSegments],
-      ['⛔️ Warnings', stats.warnings.length],
+      ['🚍 Trips', String(stats.trips)],
+      ['🕑 Trip Segments', String(stats.tripSegments)],
+      ['⛔️ Warnings', String(stats.warnings.length)],
     )
 
     log(config)(table.toString())
@@ -108,7 +109,11 @@ export function logStats(config) {
 /*
  * Create progress bar text string
  */
-const generateProgressBarString = (barTotal, barProgress, size = 40) => {
+const generateProgressBarString = (
+  barTotal: number,
+  barProgress: number,
+  size = 40,
+) => {
   const line = '-'
   const slider = '='
   if (!barTotal) {
@@ -146,7 +151,11 @@ const generateProgressBarString = (barTotal, barProgress, size = 40) => {
 /*
  * Print a progress bar to the console.
  */
-export function progressBar(formatString, barTotal, config) {
+export function progressBar(
+  formatString: string,
+  barTotal: number,
+  config: BlocksConfig,
+) {
   let barProgress = 0
 
   if (config.verbose === false) {
@@ -162,14 +171,14 @@ export function progressBar(formatString, barTotal, config) {
 
   const renderProgressString = () =>
     formatString
-      .replace('{value}', barProgress)
-      .replace('{total}', barTotal)
+      .replace('{value}', String(barProgress))
+      .replace('{total}', String(barTotal))
       .replace('{bar}', generateProgressBarString(barTotal, barProgress))
 
   log(config)(renderProgressString(), true)
 
   return {
-    interrupt(text) {
+    interrupt(text: string) {
       // Log two lines to avoid overwrite by progress bar
       logWarning(config)(text)
       logWarning(config)('')

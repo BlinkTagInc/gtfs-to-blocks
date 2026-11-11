@@ -1,10 +1,12 @@
+import type { formatTripSegments } from './formatters.js'
+import type { BlocksConfig } from './app-options.js'
 import { stringify } from 'csv-stringify'
 import { DateTime } from 'luxon'
 
 /*
  * Initialize configuration with defaults.
  */
-export function setDefaultConfig(initialConfig) {
+export function setDefaultConfig(initialConfig: BlocksConfig) {
   const defaults = {
     timeFormat: 'HH:mm:ss',
     date: DateTime.local().toFormat('yyyyMMdd'),
@@ -20,7 +22,9 @@ export function setDefaultConfig(initialConfig) {
 /*
  * Generate the CSV of trip segments
  */
-export async function generateCSV(tripSegments) {
+export async function generateCSV(
+  tripSegments: Awaited<ReturnType<typeof formatTripSegments>>,
+) {
   const lines = []
 
   lines.push([
