@@ -1,0 +1,25 @@
+{
+  "database": { "path": "./gtfs.sqlite" },
+  "extensions": ["tods-v1"],
+  "reporting": { "level": "info" },
+  "sources": [
+    {
+      "sourceId": "bus",
+      "schedule": {
+        "path": "./bus.zip",
+        "import": {
+          "csv": { "skipEmptyLines": true, "relaxQuotes": false },
+          "validation": { "onDuplicateKey": "reject" }
+        }
+      }
+    },
+    { "sourceId": "rail", "schedule": { "path": "./rail.zip" } }
+  ],
+  "export": {
+    "outputDirectory": "./blocks",
+    "overwrite": false,
+    "serviceDate": 20261110,
+    "deadheads": true,
+    "timeFormat": "HH:mm:ss"
+  }
+}

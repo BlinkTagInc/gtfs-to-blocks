@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: 'If you use GTFS-to-Blocks in research, please cite it using the metadata below.'
+title: 'GTFS-to-Blocks'
+type: software
+authors:
+  - family-names: 'Nee'
+    given-names: 'Brendan'
+    affiliation: 'BlinkTag Inc'
+repository-code: 'https://github.com/BlinkTagInc/gtfs-to-blocks'
+url: 'https://www.npmjs.com/package/gtfs-to-blocks'
+license: 'MIT'

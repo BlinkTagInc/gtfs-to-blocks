@@ -2,7 +2,7 @@
   "name": "gtfs-to-blocks",
   "version": "0.4.0",
   "private": false,
-  "description": "Generate CSV of transit departure times organized by block_id in GTFS.",
+  "description": "Export GTFS Schedule vehicle blocks and deadhead movements as CSV.",
   "keywords": [
     "transit",
     "gtfs",
@@ -19,62 +19,115 @@
     "gtfs-to-blocks": "dist/bin/gtfs-to-blocks.js"
   },
   "scripts": {
-    "prepare": "husky",
     "build": "tsdown",
     "build-watch": "tsdown --watch",
-    "test": "pnpm run build && node --test test/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "pnpm run build && tsc --noEmit",
+    "test": "pnpm run build && node --test test/*.test.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepack": "npm run build",
+    "prepare": "node .husky/install.mjs",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "test:release": "node --test test/package/release-smoke.mjs"
   },
   "dependencies": {
-    "chalk": "^6.0.1",
-    "cli-table": "^0.3.11",
-    "csv-stringify": "^6.9.0",
+    "csv-stringify": "6.9.0",
     "gtfs": "5.0.0-beta.0",
-    "lodash-es": "^4.18.1",
-    "luxon": "^3.7.2",
-    "pretty-error": "^4.0.0",
-    "sanitize-filename": "^1.6.5",
-    "sqlstring": "^2.3.3",
-    "timer-machine": "^1.1.0",
-    "yargs": "^18.2.0"
+    "luxon": "3.7.2"
   },
   "devDependencies": {
-    "@types/cli-table": "^0.3.4",
-    "@types/lodash-es": "^4.17.12",
-    "@types/luxon": "^3.7.6",
-    "@types/node": "^26.6.6",
-    "@types/timer-machine": "^1.1.3",
-    "@types/yargs": "^17.0.35",
-    "husky": "^9.1.7",
-    "lint-staged": "^17.6.0",
-    "prettier": "^3.9.10",
-    "tsdown": "^0.23.7",
-    "typescript": "^7.0.2"
+    "@types/node": "26",
+    "husky": "9.1.7",
+    "lint-staged": "17.6.0",
+    "prettier": "3.9.10",
+    "tsdown": "0.23.7",
+    "typescript": "7.1.0-beta",
+    "oxlint": "1.93.0",
+    "release-it": "^21.1.2",
+    "@release-it/keep-a-changelog": "^8.0.1",
+    "publint": "^0.3.25",
+    "@arethetypeswrong/core": "^0.18.5",
+    "@types/luxon": "3.7.6"
   },
   "engines": {
     "node": "^22.18.0 || >=24.0.0"
   },
   "release-it": {
+    "git": {
+      "requireBranch": "main",
+      "requireCommits": true,
+      "commitMessage": "Release ${version}",
+      "tagName": "${version}",
+      "tagAnnotation": "Release ${version}"
+    },
+    "npm": {
+      "publish": true,
+      "publishPackageManager": "pnpm",
+      "publishArgs": [
+        "--no-git-checks"
+      ]
+    },
     "github": {
-      "release": true
+      "release": true,
+      "releaseName": "GTFS-to-Blocks ${version}"
     },
     "plugins": {
       "@release-it/keep-a-changelog": {
-        "filename": "CHANGELOG.md"
+        "filename": "CHANGELOG.md",
+        "addUnreleased": true,
+        "addVersionUrl": true,
+        "head": "main"
       }
     },
     "hooks": {
-      "after:bump": "npm run build"
+      "before:init": [
+        "pnpm run lint",
+        "pnpm run format:check",
+        "pnpm run typecheck",
+        "pnpm run test",
+        "pnpm run test:release"
+      ],
+      "after:bump": "pnpm run build"
     }
   },
   "prettier": {
-    "singleQuote": true,
-    "semi": false
+    "singleQuote": true
   },
   "lint-staged": {
-    "*.js": "prettier --write",
-    "*.ts": "prettier --write",
-    "*.json": "prettier --write"
+    "*.{js,cjs,mjs,ts,cts,mts}": [
+      "oxlint --fix",
+      "prettier --write"
+    ],
+    "*.{json,jsonc,md,yml,yaml}": "prettier --write"
   },
-  "packageManager": "pnpm@12.18.0"
+  "packageManager": "pnpm@12.18.0",
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "CITATION.cff",
+    "LICENSE.txt",
+    "config-sample.json",
+    "config-sample-full.json",
+    "docs",
+    "examples",
+    "SECURITY.md",
+    "CONTRIBUTING.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "homepage": "https://github.com/BlinkTagInc/gtfs-to-blocks#readme",
+  "bugs": {
+    "url": "https://github.com/BlinkTagInc/gtfs-to-blocks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlinkTagInc/gtfs-to-blocks.git"
+  }
 }

@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Breaking: adopt node-GTFS v5 configuration groups and a named `exportBlocks()` API.
+- Move exporter settings under `export`, rename options, and use numeric `serviceDate` values.
+- Replace camel-case CLI flags with `--config`, `--input`, `--url`, `--database`, `--source-id`, `--service-date`, `--output`, `--overwrite`, `--no-deadheads`, `--time-format`, and `--log-level`.
+- Add source and service IDs to CSV output; default to extended GTFS times and opt-in overwriting.
+- Align source layout, ESM exports, build, lint, formatting, CI, release checks, dependencies, and package files with node-GTFS v5 and GTFS-to-GeoJSON.
+
+### Fixed
+
+- Respect weekdays and source-scoped calendar exceptions when selecting service.
+- Sort after-midnight times chronologically and keep missing times blank.
+- Keep block IDs distinct during sorting and separate operations locations from stops with identical IDs.
+- Publish CSV atomically, preserve unrelated files, and retain prior output when generation fails.
+- Reject active frequency templates rather than exporting them as scheduled vehicle trips.
+- Remove process-wide error-handler side effects and honor structured reporting levels.
+
 ## [0.4.0] - 2026-11-10
 
 ### Updated

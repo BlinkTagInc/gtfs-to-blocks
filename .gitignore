@@ -9,8 +9,10 @@ node_modules
 output
 
 # config files
-config*
-!config-sample*
+/config*.json
+!/config-sample*.json
 
 # Build files
 /dist
+/blocks
+*.tgz

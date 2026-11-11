@@ -1,13 +1,4 @@
 {
-  "agencies": [
-    {
-      "agency_key": "my-agency-name",
-      "path": "~/path/to/my/gtfs"
-    }
-  ],
-  "date": "20221024",
-  "includeDeadheads": true,
-  "outputPath": "custom/output/path",
-  "sqlitePath": "./gtfs-v5.sqlite",
-  "timeFormat": "HH:mm:ss"
+  "sources": [{ "sourceId": "my-feed", "schedule": { "path": "./gtfs.zip" } }],
+  "export": { "outputDirectory": "./blocks" }
 }

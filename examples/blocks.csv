@@ -1,0 +1,3 @@
+Source ID,Service ID,Block ID,Route ID,Route,Trip ID,Trip Short Name,Direction ID,Days,Departure Location,Arrival Location,Departure Time,Arrival Time,Trip Headsign,Stop Headsign,Is Deadhead
+bus,weekday,1,10,Route 10,outbound,101,0,Mon-Fri,Central Station,North Terminal,23:30:00,24:00:00,North Terminal,,false
+bus,weekday,1,10,Route 10,inbound,102,1,Mon-Fri,North Terminal,Central Station,24:15:00,24:45:00,Central Station,,false
