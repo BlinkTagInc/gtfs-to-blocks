@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Require Node.js 24.22.3 or later.
+- Update node-GTFS to 5.0.0-beta.2 and refresh development dependencies.
+
 ## [1.0.0] - 2026-11-11
 
 ### Changed
@@ -160,6 +163,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial Commit
-
-[Unreleased]: https://github.com/BlinkTagInc/gtfs-to-blocks/compare/1.0.0...main
-[1.0.0]: https://github.com/BlinkTagInc/gtfs-to-blocks/compare/0.4.0...1.0.0
