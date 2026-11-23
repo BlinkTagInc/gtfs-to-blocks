@@ -51,7 +51,7 @@
     "@types/luxon": "3.7.6"
   },
   "engines": {
-    "node": "^22.18.0 || >=24.0.0"
+    "node": ">=24.22.3"
   },
   "release-it": {
     "git": {

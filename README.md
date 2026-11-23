@@ -4,7 +4,7 @@ Export transit movements as a CSV grouped by source and vehicle block, then sort
 
 A block is a sequence of trips operated by the same vehicle. Each CSV row describes a movement between consecutive stops or TODS v1 operations locations. Trips without a block ID are included with a blank Block ID.
 
-Built on [node-GTFS v5](https://github.com/BlinkTagInc/node-gtfs). Requires Node.js 22.18+, 24, or 26 (ES modules).
+Built on [node-GTFS v5](https://github.com/BlinkTagInc/node-gtfs). Requires Node.js 24.22.3 or later (ES modules).
 
 ## Quick start
 

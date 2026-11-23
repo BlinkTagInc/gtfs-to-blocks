@@ -1,13 +1,13 @@
 # Contributing
 
-Use Node.js 22.18+, 24, or 26 and the pnpm version in `package.json`.
+Use Node.js 24.22.3 or later and the pnpm version in `package.json`.
 
 ```sh
 pnpm install
 pnpm build-watch
 ```
 
-The implementation lives in `src/config.ts`, `src/export.ts`, `src/blocks`, `src/io`, and `src/cli`. Tests use small local feeds and run without network access.
+The implementation lives in `src/config.ts`, `src/export.ts`, `src/blocks`, `src/io`, and `src/cli`. Tests use small local feeds. The release smoke test installs the packed tarball and its dependencies with npm.
 
 Before submitting changes:
 
